@@ -68,7 +68,7 @@ You can only move to the right from the entrance cell. What you see next might a
 #### Corridor
 ![A corridor cell](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/MoveRight.jpg)
 
-A corridor has walls both up and down, but allows movement both left and right.
+A corridor has walls on opposing sides, but allows movement in the other two directions.
 
 #### Turn
 ![A corridor cell](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/turn.jpg)
@@ -89,6 +89,10 @@ As you leave a cell that you have visited, the maze automatically marks it with 
 ![A corridor cell](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/Exit.jpg)
 
 This cell is the players' goal!  It is the end of the maze. When players see this, it means they have solved the maze. A double right-side line distinguishes the exit from the other cells.
+
+#### Terminus
+
+I will let you imagine what a terminus cell looks like. It has three walls, and only lets you move back out the same way you came in.  Better yet, use the blocks to create your own maze game then play it. You'll encounter plenty of terminus blocks as you virtually "wander around" in there.
 
 ## These blocks are tools for Makers
 
