@@ -56,7 +56,7 @@ turns the display of "breadcrumbs" on or off. Internally, the custom code condit
 
 ## How Cells of the Maze are Displayed
 
-Think of a cell as one spot, or "room" in the maze. If you were walking along a corridor in a real maze, a cell would be the part of the floor where the path turns a corner, or hits a dead end, or where it intersects with other path. The micro:bit displays one cell at a time. It shows the corridor walls at that location. If you try moving toward a wall, the wall with flash. If there is not a wall, it means you can move in that direction.
+Think of a cell as one spot, or "room" in the maze. If you were walking along a corridor in a real maze, a cell would be the part of the floor where the path turns a corner, or hits a dead end, or where it intersects with another path. The micro:bit displays one cell at a time. It shows the corridor walls at that location. If you try moving toward a wall, the wall will flash. If there is not a wall, it means you can move in that direction.
 
 #### The Entrance
 The first cell you see in a new maze is the entrance. It has a double wall on the left side, and looks like this:
