@@ -53,9 +53,13 @@ The move block is used over and over again until the player finds their way to t
 ### maze.displayCrumbs(Crumbstatus.ON) 
 turns the display of "breadcrumbs" on or off. Internally, the custom code conditions a flag to indicate when a player has visited a cell. The player can use this function to tell the code whether to display the "breadcrumb" the next time the player visits that cell.  The Crumbstatus is chosen from a list. The choices are: ON and OFF.
 
-## These blocks are tools
+## These blocks are tools for Makers
 
 The blocks are here for you, the code writer, to create a game with a micro:bit. Think of the blocks like a ball. The fun begins when you take it out and play with it! 
+
+Make a game controller and write some code that lets players tell the micro:bit which way they want to move in the maze. Use these blocks to create a maze and to transmit the players' directions.
+
+Hint: small mazes are trivially easy to solve. Use small dimensions to develop your code, test it, and show players how your game works. Larger mazes can be quite interesting and may take some time to solve. You might like it!
 
 ## Edit this project ![Build status badge](https://github.com/iowadave/pxt-maze/workflows/MakeCode/badge.svg)
 
