@@ -92,7 +92,7 @@ This cell is the players' goal!  It is the end of the maze. When players see thi
 
 #### Terminus
 
-I will let you imagine what a terminus cell looks like. It has three walls, and only lets you move back out the same way you came in.  Better yet, use the blocks to create your own maze game then play it. You'll encounter plenty of terminus blocks as you virtually "wander around" in there.
+I will let you imagine what a terminus cell looks like. It has three walls, and only lets you move back out the same way you came in.  Better yet, use the blocks to create your own maze game then play it. You'll encounter plenty of terminus cells as you virtually "wander around" in there.
 
 ## These blocks are tools for Makers
 
