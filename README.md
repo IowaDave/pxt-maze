@@ -5,20 +5,20 @@ Give the MakeCode editor a set of custom blocks designed to create and interact 
 
 > Open this as a web page at [https://iowadave.github.io/pxt-maze/](https://iowadave.github.io/pxt-maze/)
 
-## Blocks preview
-
-This image shows how the blocks appear after being imported into the MakeCode editor.
-
-![A rendered view of the blocks](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/maze_blocks.png)
-
 ## Use as Extension
 
-This repository can be added as an **extension** in MakeCode.
+This repository is designed to be added as an **extension** in MakeCode.
 
 * open [https://makecode.microbit.org/](https://makecode.microbit.org/)
 * click on **New Project**
 * click on **Extensions** under the gearwheel menu
 * search for **https://github.com/iowadave/pxt-maze** and import
+
+## Blocks preview
+
+This image shows how the blocks appear after being imported into the MakeCode editor.
+
+![A rendered view of the blocks](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/maze_blocks.png)
 
 ## About the Blocks
 
