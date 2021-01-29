@@ -7,8 +7,7 @@ Give the MakeCode editor a set of custom blocks designed to create and interact 
 
 ## Blocks preview
 
-This image shows the blocks code from the last commit in master.
-This image may take a few minutes to refresh.
+This image shows how the blocks appear after being imported into the MakeCode editor.
 
 ![A rendered view of the blocks](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/maze_blocks.png)
 
