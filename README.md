@@ -55,7 +55,7 @@ turns the display of "breadcrumbs" on or off. Internally, the custom code condit
 
 ## These blocks are tools
 
-The blocks are here for you, the code writer, to create a game with a micro:bit. Think of the blocks like a ball, which does nothing until you take it out and play with it. 
+The blocks are here for you, the code writer, to create a game with a micro:bit. Think of the blocks like a ball. The fun begins when you take it out and play with it! 
 
 ## Edit this project ![Build status badge](https://github.com/iowadave/pxt-maze/workflows/MakeCode/badge.svg)
 
