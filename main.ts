@@ -18,7 +18,7 @@ enum Directions {
 /**
  * Custom blocks
  */
-//% weight=25 color=#bb6417 icon="\uf0b2"
+//% weight=25 color=#a45100 icon="\uf047"
 namespace maze{
 
 
