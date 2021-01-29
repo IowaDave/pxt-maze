@@ -23,6 +23,8 @@ This repository can be added as an **extension** in MakeCode.
 
 ## About the Blocks
 
+![The new maze block](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/new_maze_block.png)
+
 ### maze.newMaze(rows, columns) 
 creates a grid of "cells" arranged in rows a columns. Visualize it as a rectangular maze. The entrance is at the upper-left corner. The exit is at the lower-right corner.
 
@@ -34,13 +36,19 @@ It does not have to be square; the row and column and column numbers can be diff
 
 After the new maze has been created, this function actomatically displays the cell at the entrance to the maze. The display appears on the LED panel of the micro:bit.
 
+![The maximum dimension block](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/maximum_block.png)
+
 ### maze.maximumDimension() 
 is a reporter block that gives the maximum number of columns or rows. If you write a game that lets the player select a number of rows or columns, you may use this block to compare and help ensure that the number does not exceed the maximum. If you choose to edit these custom blocks, keep in mind to edit both the newMaze() function and the maximumDimension() function so they both use the same maximum value. 
+
+![The move block](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/move_block.png)
 
 ### maze.move(Directions.UP) 
 attempts to move the player's position to a new cell that is Up, Down, Left or Right of the cell currently displayed. If the cell has a boundary in that direction, the boundary flashes and the position does not change. If there is not a boundary, the position is updated and the new cell is displayed on the micro:bit.  Directions are chosen from a list. The choices include: UP, DOWN, LEFT and RIGHT.
 
 The move block is used over and over again until the player finds their way to the exit.
+
+![The breadcrumbs block](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/breadcrumbs_block.png)
 
 ### maze.displayCrumbs(Crumbstatus.ON) 
 turns the display of "breadcrumbs" on or off. Internally, the custom code conditions a flag to indicate when a player has visited a cell. The player can use this function to tell the code whether to display the "breadcrumb" the next time the player visits that cell.  The Crumbstatus is chosen from a list. The choices are: ON and OFF.
