@@ -3,7 +3,7 @@
 
 Give the MakeCode editor a set of custom blocks designed to create and interact with a virtual maze.
 
-> Open this page at [https://iowadave.github.io/pxt-maze/](https://iowadave.github.io/pxt-maze/)
+> Open this as a web page at [https://iowadave.github.io/pxt-maze/](https://iowadave.github.io/pxt-maze/)
 
 ## Blocks preview
 
@@ -54,6 +54,42 @@ The move block is used over and over again until the player finds their way to t
 
 ### maze.displayCrumbs(Crumbstatus.ON) 
 turns the display of "breadcrumbs" on or off. Internally, the custom code conditions a flag to indicate when a player has visited a cell. The player can use this function to tell the code whether to display the "breadcrumb" the next time the player visits that cell.  The Crumbstatus is chosen from a list. The choices are: ON and OFF.
+
+## How Cells of the Maze are Displayed
+
+Think of a cell as one spot, or "room" in the maze. If you were walking along a corridor in a real maze, a cell would be the part of the floor where the path turns a corner, or hits a dead end, or where it intersects with other path. The micro:bit displays one cell at a time. It shows the corridor walls at that location. If you try moving toward a wall, the wall with flash. If there is not a wall, it means you can move in that direction.
+
+#### The Entrance
+The first cell you see in a new maze is the entrance. It has a double wall on the left side, and looks like this:
+
+![The maze entrance](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/Entrance.jpg)
+
+You can only move to the right from the entrance cell. What you see next might any one of the following examples:
+
+#### Corridor
+![A corridor cell](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/MoveRight.jpg)
+
+A corridor has walls both up and down, but allows movement both left and right.
+
+#### Turn
+![A corridor cell](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/turn.jpg)
+
+A turn cell has walls on two sides of one corner, but allows movement in the other two directions.
+
+#### Intersection
+![A corridor cell](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/branch.jpg)
+
+An intersection cell allows movement in more than two directions.  Single dots indicate corners of the cell that have no walls touching them. The path in the example shown above continues in three directions. Deeper into the maze, you might find cells that have no walls, in which case you can move in all four directions.
+
+#### Breadcrumbs
+![A corridor cell](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/crumb.jpg)
+
+As you leave a cell that you have visited, the maze automatically marks it with a "breadcrumb". Your code can use the displayCrumbs() block to show or hide these markers. If the display of breadcrumbs is turned on, players will see a dot in the center of a cell the next time they visit the cell.
+
+#### The Exit
+![A corridor cell](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/Exit.jpg)
+
+This cell is the players' goal!  It is the end of the maze. When players see this, it means they have solved the maze. A double right-side line distinguishes the exit from the other cells.
 
 ## These blocks are tools for Makers
 
