@@ -41,6 +41,8 @@ After the new maze has been created, this function actomatically displays the ce
 ### maze.maximumDimension() 
 is a reporter block that gives the maximum number of columns or rows. If you write a game that lets the player select a number of rows or columns, you may use this block to compare and help ensure that the number does not exceed the maximum. If you choose to edit these custom blocks, keep in mind to edit both the newMaze() function and the maximumDimension() function so they both use the same maximum value. 
 
+**A comment on dimensions**: the maze creation algorithm produces what mathematicians call "uniform spanning trees". Basically it means that every cell in the maze can be reached; no areas are blocked off. Also, it means that the mazes are produced by a random process. And *that* means, for larger mazes of, say, 9 rows by 9 columns or more, chances are you will never see exactly the same maze twice.
+
 ![The move block](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/move_block.png)
 
 ### maze.move(Directions.UP) 
