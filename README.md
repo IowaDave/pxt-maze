@@ -100,7 +100,9 @@ The blocks are here for you, the code writer, to create a game with a micro:bit.
 
 Make a game controller and write some code that lets players tell the micro:bit which way they want to move in the maze. Use these blocks to create a maze and to transmit the players' directions.
 
-Here is a link to an article showing how I made a maze game using the blocks. It describes assembly of a game player console and gives the code that interacts with the player.  [https://iowadave.github.io/pxt-makerbit-maze](https://iowadave.github.io/pxt-makerbit-maze)
+Here is a link to an article showing an example of how I made a maze game using the blocks. It describes assembly of a game player console and gives the code that interacts with the player.  [https://iowadave.github.io/pxt-makerbit-maze](https://iowadave.github.io/pxt-makerbit-maze)
+
+I hope you will find a way to use these blocks in a maze game that you invent. There are some ideas for embellishment in that link mentioned above. 
 
 Hint: small mazes are trivially easy to solve. Use small dimensions to develop your code, test it, and show players how your game works. Larger mazes can be quite interesting and may take some time to solve. You might like it!
 
