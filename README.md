@@ -5,9 +5,23 @@ Give the MakeCode editor a set of custom blocks designed to create and interact 
 
 > Open this as a web page at [https://iowadave.github.io/pxt-maze/](https://iowadave.github.io/pxt-maze/)
 
-## Use as Extension
+## A Hardware-Agnostic MakeCode Extension
 
-This repository is designed to be added as an **extension** in MakeCode.
+This repository directly targets only the actual micro:bit itself, but not any specific accessory device. It is designed as an **extension** in MakeCode empowering users to build their own devices and to write their own code for playing games in a virtual maze. 
+
+The maze is implemented inside the micro:bit by the code in this repository. Users may select or assemble hardware of their own choice for attrachment to the micro:bit. 
+
+For reference purposes, the developers demonstrate the assembly of a game using this repository with MakeCode and the MakerBit by Roger Wagner, offered by 1010 Technologies. The example can be accessed at the following URL: 
+
+[https://iowadave.github.io/pxt-makerbit-maze](https://iowadave.github.io/pxt-makerbit-maze)
+
+The corresponding repository holding the code for that demonstration project is:
+
+[https://github.com/iowadave/pxt-makerbit-maze](https://github.com/iowadave/pxt-makerbit-maze)
+
+We recognize and actually hope that users may think of other ways to enjoy the features of this repository with other, different hardware too! It's our gift to the larger community in gratitude for the welcome that the MakerBit has received.
+
+## Import the Extension into MakeCode
 
 * open [https://makecode.microbit.org/](https://makecode.microbit.org/)
 * click on **New Project**
