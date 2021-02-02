@@ -43,18 +43,25 @@ creates a grid of "cells" arranged in rows a columns. Visualize it as a rectangu
 
 The minimum number of rows or columns is two, which means that the maze can be as small as 2 rows of 2 cells each: maze.newMaze(2,2);
 
-It can be as large as 15 rows of 15 cells each: newMaze(15,15);
-
 It does not have to be square; the row and column and column numbers can be different: newMaze(8, 10);
 
 After the new maze has been created, this function actomatically displays the cell at the entrance to the maze. The display appears on the LED panel of the micro:bit.
 
-![The maximum dimension block](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/maximum_block.png)
+**A comment on dimensions**: The newMaze() block is designed with a slider for selecting dimensions in a range between 2 and 15. The block can actually accept values larger than 15. The larger values just need to be put in explicitly. For example, the following code segment would produce a maze having 30 rows and 20 columns:
 
-### maze.maximumDimension() 
-is a reporter block that gives the maximum number of columns or rows. If you write a game that lets the player select a number of rows or columns, you may use this block to compare and help ensure that the number does not exceed the maximum. If you choose to edit these custom blocks, keep in mind to edit both the newMaze() function and the maximumDimension() function so they both use the same maximum value. 
+```typescript
+let bigRows = 30;
+let bigCols = 20;
+maze.newMaze(bigRows, bigCols);
+```
 
-**A comment on dimensions**: the maze creation algorithm produces what mathematicians call "uniform spanning trees". Basically it means that every cell in the maze can be reached; no areas are blocked off. Also, it means that the mazes are produced by a random process. And *that* means, for larger mazes of, say, 9 rows by 9 columns or more, chances are you will never see exactly the same maze twice.
+NOTE: bigger dimensions take longer to play, of course. They also take longer to create. The create-time gets longer because the maze algorithm produces what mathematicians call "uniform spanning trees". Basically it means that every cell in the maze can be reached; no areas are blocked off. Also, it means that the mazes are produced by a random process. This algorithm has advantages and disadvantages. 
+
+The advantage, for mazes larger than, say, 8 rows by 8 columns, is that you are unlikely ever to see exactly the same maze twice. 
+
+The disadvantage is the process that creates the maze takes longer as the dimensions get larger. 15 x 15 goes pretty fast, which is why the slider goes up to 15. Experiment with larger dimensions if you wish to gauge a practical upper limit for your situation. How patient are your players likely to be?
+
+Also, keep in mind that each cell of a maze occupies one byte of memory. It means the amount of available memory imposes an upper limit.
 
 ![The move block](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/move_block.png)
 
@@ -66,7 +73,12 @@ The move block is used over and over again until the player finds their way to t
 ![The breadcrumbs block](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/breadcrumbs_block.png)
 
 ### maze.displayCrumbs(Crumbstatus.ON) 
-turns the display of "breadcrumbs" on or off. Internally, the custom code conditions a flag to indicate when a player has visited a cell. The player can use this function to tell the code whether to display the "breadcrumb" the next time the player visits that cell.  The Crumbstatus is chosen from a list. The choices are: ON and OFF.
+turns the display of "breadcrumbs" on or off. Internally, the custom code conditions a flag to indicate when a player has visited a cell. The player can use this function to tell the code whether to display the "breadcrumb" the next time the player visits that cell.  The Crumbstatus is chosen from a list. The choices are: ON and OFF. Your code can test the setting of this flag with the showingBreacdcrumbs() function, described below.
+
+![The showing breadcrumbs block](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/showingBreadcrumbs.png)
+
+### maze.showingBreadcrumbs() 
+is a reporter block that returns a true-false value. It tests the value that the displayCrumbs() block sets.
 
 ## How Cells of the Maze are Displayed
 
