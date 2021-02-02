@@ -14,7 +14,6 @@ enum Directions {
     //% block="right" 
     RIGHT 
 }
-
 /**
  * Custom blocks
  */
