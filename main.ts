@@ -44,11 +44,13 @@ export function displayCrumbs(status: Crumbstatus) {
     }
 }
 
-// Programmer take care here!
-// Make sure that the value defined below, maxDimension,
-// is used consistently in the function that follows it
-
-let maxDimension = 15;
+/**
+ * return the value of the showCrumbs flag
+ */
+//% block
+export function showingBreadcrumbs (): boolean {
+    return showCrumbs;
+}
 
 /**
  * start a new game
@@ -63,14 +65,6 @@ export function newMaze(rows: number, cols: number) {
     mazeCOLS = cols;
     mazeROWS = rows;
     startNewGame();
-}
-
-/**
- * return the value of the maxDimension
- */
-//% block
-export function maximumDimension (): number {
-    return maxDimension;
 }
 
 /**
@@ -527,8 +521,6 @@ function flashBottomLine() {
 function startNewGame() {
     // turn off breadcrumb display 
     showCrumbs = false;
-    // turn off the breadcrumb status LED 
-    pins.digitalWritePin(DigitalPin.P16, 0);
     // create a new maze
     makeMaze();
     // place the player at the game entrance
