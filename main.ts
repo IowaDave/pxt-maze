@@ -1,10 +1,22 @@
-enum Crumbstatus {
+
+/**
+ * Custom blocks for maze games
+ * by David Sparks February 2021
+ */
+
+enum MazePortal {
+    //% block="corners"
+    CORNERS,
+    //% block="random"
+    RANDOM
+}
+enum MazeFlag {
     //% block="on"
     ON,
     //% block="off"
     OFF
 }
-enum Directions {
+enum MazeDirection {
     //% block="up"
     UP, 
     //% block="down" 
@@ -14,29 +26,98 @@ enum Directions {
     //% block="right" 
     RIGHT 
 }
+enum MazeTreasure {
+    //% block="none"
+    NONE,
+    //% block="hidden"
+    HIDE,
+    //% block="magic key"
+    KEY
+}
+
+// **************************************************************
+
 /**
  * Custom blocks
  */
 //% weight=25 color=#a45100 icon="\uf047"
 namespace maze{
 
+// variables having namespace scope 
 
-/** maze functions follow below */
+let showCrumbs = false; // for breadcrumbs display 
+
+// portal- related variables
+let entranceRow = 0; // set during the makeMaze() function
+let exitRow = 0; // set during the makeMaze() function
+let randomPortals = false; // set by the setMazePortals() block 
+
+// facts about the maze 
+let maze: Buffer; // to be defined later during makeMaze() function
+let mazeCOLS = 2; // set by the newMaze() block then used as a constant
+let mazeROWS = 2; // set by the newMaze() block then used as a constant
+
+// game set-up flag modified only by the setMazeTreasure() block
+// and evaluated in the makeMaze() function
+let hiddenTreasure = false;
+
+// game set-up flag modified only by the setMazeTreasure() block
+// and evaluated in the hasRightBoundary() function
+let treasureExitKey = false;
+
+// status flag modified by the functions checkTreasure() and makeMaze()
+// and its value reported by the playerHasTreasure() block
+let treasureTaken = false; 
+
+// constants for defining and analyzing maze contents
+const LEFTLINE = 1;
+const TOPLINE = 2;
+const RIGHTLINE = 4;
+const BOTTOMLINE = 8;
+const VISITFLAG = 16;
+const TREASURE = 32;
+
+//constants for exporting and importing the maze buffer
+const PORTALBIT = 1;
+const TREASUREBIT = 2;
+const EXITKEYBIT = 4;
+
+// facts about a cell, defined here, used everywhere
+let cellRow = 0;
+let cellCol = 0;
+
+// functions that expose methods but do not produce blocks 
+
+/**
+ * get the maze buffer
+ */
+export function getMazeBuffer () : Buffer {
+    return maze;
+}
+
+/**
+ * set the maze buffer
+ */
+export function setMazeBuffer (sharedMaze:Buffer) {
+    // not implemented yet. Needs a lot of thought.
+}
 
 
-let showCrumbs = false;
+// ***************************************************************
+
+// functions that expose blocks
 
 /**
  * turn showing of breadcrumbs on and off 
  * @param status 
  */
 //% block="turn breadcrumbs %status"
-export function displayCrumbs(status: Crumbstatus) {
+export function displayCrumbs(status: MazeFlag) {
     switch (status) {
-        case Crumbstatus.ON:
+        case MazeFlag.ON:
             showCrumbs = true;
             break;
-        case Crumbstatus.OFF:
+        case MazeFlag.OFF:
             showCrumbs = false;
             break;
         default:
@@ -44,18 +125,58 @@ export function displayCrumbs(status: Crumbstatus) {
     }
 }
 
+// Note Feb 2021 removed a getter function reporting showCrumbs status
+// because user-side code sets and clears the flag thus already knows it.
+
 /**
- * return the value of the showCrumbs flag
+ * set the value of the randomPortals flag 
  */
-//% block
-export function showingBreadcrumbs (): boolean {
-    return showCrumbs;
+//% block="place maze portals at %location"
+export function setMazePortals(location: MazePortal) {
+    switch (location) {
+        case MazePortal.CORNERS:
+            randomPortals = false;
+            break;
+        case MazePortal.RANDOM:
+            randomPortals = true;
+            break;
+        default:
+            randomPortals = false;
+    }
 }
 
 /**
+ * set the value of the hiddenTreasure flag
+ */
+//% block="set maze treasure to %status"
+export function setMazeTreasure (status: MazeTreasure) {
+    switch (status) {
+        case MazeTreasure.HIDE:
+            hiddenTreasure = true;
+            treasureExitKey = false;
+            break;
+        case MazeTreasure.KEY:
+            hiddenTreasure = true;
+            treasureExitKey = true;
+            break;
+        case MazeTreasure.NONE:
+        default:
+            hiddenTreasure = false;
+            treasureExitKey = false;
+    }
+}
+
+/**
+ * return the value of the treasureTaken flag
+ */
+//% block
+export function playerHasTreasure (): boolean {
+    return treasureTaken;
+}
+
+
+/**
  * start a new game
- * Programmer must ensure that the ".max=" values given below
- * are the same as the maxDimension value defined above
  */
 //% rows.min=2 rows.max=15 rows.defl=2
 //% cols.min=2 cols.max=15 cols.defl=2
@@ -72,18 +193,18 @@ export function newMaze(rows: number, cols: number) {
  * @param direction 
  */
 //% block="move %direction"
-export function move(direction: Directions) {
+export function move(direction: MazeDirection) {
     switch (direction) {
-        case Directions.UP:
+        case MazeDirection.UP:
             moveUp(cellRow, cellCol);
             break;
-        case Directions.DOWN:
+        case MazeDirection.DOWN:
             moveDown(cellRow, cellCol);
             break;
-        case Directions.LEFT:
+        case MazeDirection.LEFT:
             moveLeft(cellRow, cellCol);
             break;
-        case Directions.RIGHT:
+        case MazeDirection.RIGHT:
             moveRight(cellRow, cellCol);
             break;
         default:
@@ -91,12 +212,9 @@ export function move(direction: Directions) {
     }
 }
 
-/******************************************************************
- * facts about the maze 
- ******************************************************************/
-let maze: Buffer; // to be defined later
-let mazeCOLS = 2; // default
-let mazeROWS = 2; // default
+// ***********************************************
+// internal (private) functions of the namespace 
+// ***********************************************
 
 // calculates an index number into the maze buffer,
 // from a pair of row and column numbers
@@ -104,20 +222,6 @@ function index (row: number, col: number) {
   return (row * mazeCOLS) + col;
 }
 
-/**
- * constants for defining and analyzing maze contents
- */
-const LEFTLINE = 1;
-const TOPLINE = 2;
-const RIGHTLINE = 4;
-const BOTTOMLINE = 8;
-const VISITFLAG = 16;
-
-/*******************************************************************
- * facts about a cell
- *******************************************************************/
-let cellRow = 0;
-let cellCol = 0;
 
 /**
  * cellValue returns the value stored
@@ -127,6 +231,8 @@ function cellValue (row: number, col: number): number {
     return maze.getNumber(NumberFormat.Int8LE, 
                     index(row, col)); 
 }
+
+// functions to ascertain cell attributes
 
 /**
  * hasTopBoundary
@@ -149,10 +255,19 @@ function hasTopBoundary(row: number, col: number): boolean {
  * return true if cell at (row, col) has a left boundary
  */
 function hasLeftBoundary(row: number, col: number): boolean {
+    // treat special case of portals first
     // true if cell is Entrance 
     if (isEntrance(row, col)) return true;
-    // true if cell defines a LEFTLINE 
-    if ((cellValue(row, col) & LEFTLINE) != 0) return true;
+    // next, a special check when we are in the exit 
+    if (isExit(row, col)) {
+        // we hope to return false for this location 
+        // however, to be sure, check the cell to the left 
+        if ((cellValue(row, col - 1) & RIGHTLINE) != 0) return true;
+        // otherwise
+        return false;
+    }
+    // true if non-exit cell defines a LEFTLINE 
+    if  ((cellValue(row, col) & LEFTLINE) != 0) return true;
     // otherwise
     return false;
 }
@@ -162,10 +277,29 @@ function hasLeftBoundary(row: number, col: number): boolean {
  * return true if cell at (row, col) has a right boundary
  */
 function hasRightBoundary(row: number, col: number): boolean {
+    // treat special case of portals first 
     // true if cell is Exit 
     if (isExit(row, col)) return true;
-    // true if cell defines a RIGHTLINE 
-    if ((cellValue(row, col) & RIGHTLINE) != 0) return true;
+    // next, a special check when we are in the entrance 
+    if (isEntrance(row, col)) {
+        // we hope to return false for this location 
+        // however, to be sure, check the cell to the right 
+        if ((cellValue(row, col + 1) & LEFTLINE) != 0) return true;
+        // otherwise
+        return false;
+    }
+    // next, a special check when on exit threshhold 
+    if (isExitThreshhold(row, col)) {
+        // show a right boundary when treasure is key
+        // but player does not possess it
+        if (
+            (treasureExitKey == true)
+            &&
+            (treasureTaken == false)
+        ) return true;
+    }
+    // true if non-entrance cell defines a RIGHTLINE 
+    if  ((cellValue(row, col) & RIGHTLINE) != 0) return true;
     // true if the column number to the right is in the maze
     // and the cell in that column on this row defines a LEFTLINE
     if (((col + 1) < mazeCOLS) 
@@ -206,14 +340,32 @@ function hasBreadcrumb(row: number, col:number): boolean {
 
 function isExit(row: number, col: number): boolean {
     // true if on bottom row and to the right of rightmost cell
-    if ((row == mazeROWS - 1) && (col >= mazeCOLS)) return true;
+    if ((row == exitRow) && (col >= mazeCOLS)) return true;
     // otherwise
     return false;
 }
 
 function isEntrance(row: number, col: number) {
     // true if on row 0 and col is -1
-    if ((row == 0) && (col < 0)) return true;
+    if ((row == entranceRow) && (col < 0)) return true;
+    // otherwise
+    return false;
+}
+
+function isExitThreshhold(row: number, col: number) {
+    // true if rightmost cell on exit row
+    if (
+            (row == exitRow)
+            &&
+            (col == mazeCOLS - 1)
+    ) return true;
+    // otherwise
+    return false;
+}
+
+function hasTreasure (row: number, col: number): boolean {
+    // true if the TREASURE flag is set
+    if ((cellValue(row, col) & TREASURE) != 0) return true;
     // otherwise
     return false;
 }
@@ -234,12 +386,60 @@ function checkCrumb(row: number, col: number) {
     }
 }
 
+function hideTreasure(row: number, col: number) {
+    // player does not have treasure 
+    treasureTaken = false;
+    // ensure treasure flag is on in the cell 
+    do {
+        // toggle the flag in the cell
+        maze.setNumber(NumberFormat.Int8LE, 
+            index(row, col), 
+            cellValue(row, col) ^ TREASURE);
+    } while (
+        // while it remains turned off 
+        // (that is, until it is turned on)
+        (cellValue(row, col) & TREASURE) == 0
+    )
+}
+
+function takeTreasure(row: number, col: number) {
+    // ensure treasure flag is off in the cell 
+    do {
+        // toggle the flag in the cell 
+        maze.setNumber(NumberFormat.Int8LE, 
+            index(row, col), 
+            cellValue(row, col) ^ TREASURE);
+    } while (
+        // while it remains turned on 
+        // (that is, until it is turned off)
+        (cellValue(row, col) & TREASURE) != 0
+    )
+    // give treasure to the player 
+    treasureTaken = true;
+}
+
+function checkTreasure (row: number, col: number) {
+    if (hasTreasure(row, col)) {
+        // draw the treasure icon
+        drawTreasure();
+        // then flash it a little, leaving it visible
+        for (let count = 0; count < 5; count++) {
+            basic.pause(100);
+            clearTreasure();
+            basic.pause(100);
+            drawTreasure();
+        }
+        // take the treasure
+            takeTreasure(row, col);
+    }
+}
+
 // moveUp is called from the main loop when pinUp flag is true 
 function moveUp(row: number, col: number) {
     if (hasTopBoundary(row, col)) {
         flashTopLine();
     } else {
-        checkCrumb(row, col);
+//        checkCrumb(row, col);
         arrowsUp();
         cellRow--;
         displayCell(cellRow, cellCol);
@@ -251,7 +451,7 @@ function moveLeft(row: number, col: number) {
     if (hasLeftBoundary(row, col)) {
         flashLeftLine();
     } else {
-        checkCrumb(row, col);
+//        checkCrumb(row, col);
         arrowsLeft();
         cellCol--;
         displayCell(cellRow, cellCol);
@@ -263,7 +463,7 @@ function moveRight(row: number, col: number) {
     if (hasRightBoundary(row, col)) {
         flashRightLine();
     } else {
-        checkCrumb(row, col);
+//        checkCrumb(row, col);
         arrowsRight(); 
         cellCol++;
         displayCell(cellRow, cellCol);
@@ -275,7 +475,7 @@ function moveDown(row: number, col: number) {
     if (hasBottomBoundary(row, col)) {
         flashBottomLine();
     } else {
-        checkCrumb(row, col);
+//        checkCrumb(row, col);
         arrowsDown(); 
         cellRow++;
         displayCell(cellRow, cellCol);
@@ -287,7 +487,7 @@ function moveDown(row: number, col: number) {
  *   these functions animate a pair of arrowheads           *
  *   moving in the named direction across the LED display   *
  ************************************************************/
-let dwellTime = 80; // animation speed, smaller = faster
+let dwellTime = 50; // animation speed, smaller = faster
 
 function arrowsLeft () {
     basic.clearScreen();
@@ -402,7 +602,9 @@ function displayCell(row: number, col: number) {
     // show breadcrumbs if flag enabled
     if (showCrumbs && hasBreadcrumb(row, col)) {
         led.plot(2,2);
-    } else {led.unplot(2,2)} // turn crumbs off otherwise 
+    } else {led.unplot(2,2)} // turn crumbs off otherwise
+    // condition the breadcrumb flag for future visits
+    checkCrumb(row, col);
     // don't show a breadcrumb at Entry and Exit locations 
     if (isEntrance(row, col)) {
         drawEntryBar();
@@ -412,7 +614,11 @@ function displayCell(row: number, col: number) {
         drawExitBar();
         led.unplot(2,2);
     }
+    // finally, check for treasure!
+    checkTreasure(row, col);
 }
+
+// functions to render cell elements on the led display 
 
 function outlineCell() {
     basic.clearScreen();
@@ -456,6 +662,23 @@ function drawExitBar() {
     led.plot(3,1);
     led.plot(3,2);
     led.plot(3,3);
+}
+
+function drawTreasure() {
+    // in the shape of a diamond!
+    led.plot(2,1);
+    led.plot(1,2);
+//    led.plot(2,2);
+    led.plot(3,2);
+    led.plot(2,3);
+}
+
+function clearTreasure() {
+    led.unplot(2,1);
+    led.unplot(1,2);
+//    led.unplot(2,2);
+    led.unplot(3,2);
+    led.unplot(2,3);
 }
 
 // the following functions flash a boundary line
@@ -519,15 +742,47 @@ function flashBottomLine() {
     }
 
 function startNewGame() {
+    // initialize certain namespace variables
     // turn off breadcrumb display 
     showCrumbs = false;
     // create a new maze
     makeMaze();
     // place the player at the game entrance
-    cellRow = 0;
+    cellRow = entranceRow;
     cellCol = -1;
     // display the entrance
     displayCell(cellRow, cellCol);
+}
+
+function createMazeBuffer() {
+    // attach the maze container to a new buffer 
+    // buffer size will be rows x columns, plus 3 bytes more 
+    // the extra bytes to hold certain setup parameters.
+    // This structure makes it possible to export the maze 
+    // to another micro:bit, and to import a maze.
+    maze = pins.createBuffer((mazeROWS * mazeCOLS) + 3);
+    // Set each and all cells to have a top line and a left line
+    maze.fill(TOPLINE + LEFTLINE);
+    // now replace the final three bytes with maze setup parameters 
+    let mazeLength = maze.length;
+    // copy the number of rows into the buffer
+    let mazeRowsByte = mazeLength - 3;
+    maze.setNumber(NumberFormat.Int8LE, mazeRowsByte, mazeROWS);
+    // copy the number of columns into the buffer
+    let mazeColsByte = mazeLength - 2;
+    maze.setNumber(NumberFormat.Int8LE, mazeColsByte, mazeCOLS);
+    // set up a bitfield for treasure properties 
+    let mazeBits = 0;
+    // store the random portals boolean
+    if (randomPortals == true) mazeBits += PORTALBIT;
+    // store the treasure boolean
+    if (hiddenTreasure == true) mazeBits += TREASUREBIT;
+    // store the magic key bit
+    if (treasureExitKey == true) mazeBits += EXITKEYBIT;
+    // save the bitfield in the buffer
+    let mazeBitsByte = -1;
+    maze.setNumber(NumberFormat.Int8LE, mazeBitsByte, mazeBits);
+
 }
 
 /****************************************************************
@@ -544,7 +799,6 @@ function startNewGame() {
  * Adapted January 2021 for MakeCode to run on a micro:bit 		*
  ****************************************************************/
 function makeMaze() {
-    // maze-creation variables
     /********************************************************************************* 
      * GENERAL INFORMATION ABOUT THE MAZE DATA STRUCTURE
      * The maze array is stored in a buffer of raw bytes, 
@@ -564,18 +818,14 @@ function makeMaze() {
      * This is handled by the index(row, col) function defined above.
      * Example of getting a value at row, col:
      * value = maze.getNumber(NumberFormat.Int8LE, index(row, col))
-     * This code body gives a second way to get a cell's value, 
-     * namely the cellValue(row, col) function defined above.
+     * The cellValue(row, col) function defined above works that way.
      *********************************************************************************/
 
+    // initialize the maze buffer
+    createMazeBuffer();
+
     // Calculate number of cells from mazeROWS and mazeCOLS
-    // as those values stand at the time this function gets run.
-    // Note: 2 x 2 is the startup default but user may change.
     let unVisited = mazeROWS*mazeCOLS; 
-  	// initialize maze buffer
-    maze = pins.createBuffer(unVisited);
-    // Set each and all cells to have a top line and a left line
-    maze.fill(TOPLINE + LEFTLINE);
 
     /*********************************************************************************
      * I want to keep the program in row,col context as much as possible.
@@ -584,24 +834,70 @@ function makeMaze() {
      * The arrays for origin, destination, and motion
      * are regular Typescript numbers because it's easiest that way.
      *********************************************************************************/
+
+    // workhorse variables having function scope
     let origin = [0,0];  // [row, col]
     let destination = [0,0];
     let motion = [0,0];
+    let treasureCell = [0,0];
     let row = 0;
     let col = 0;
+
+    // establish the portal row locations
+    // initialize to the corners
+    entranceRow = 0;
+    exitRow = mazeROWS - 1;
+    // then modify if using random locations
+    if (randomPortals == true) {
+        entranceRow = Math.floor(Math.random() * mazeROWS);
+        exitRow = Math.floor(Math.random() * mazeROWS);
+    }
+
+    // locate the optional treasure 
+    // the column is a simple calculation
+    treasureCell[1] = Math.floor(Math.random() * mazeCOLS);
+    // the row is a little more complex because 
+    // we must keep it out of the entry and exit portals 
+    // which we do by comparing their respective indexes   
+    // into the maze buffer 
+    do {
+        // calculate a candidate location 
+        treasureCell[0] = Math.floor(Math.random() * mazeROWS);
+    } while (
+        (
+            (index(treasureCell[0], treasureCell[1])) // treasure index  
+            == // re-calculate location if treasure index is equal to  
+            (index(exitRow, mazeCOLS)) // exit index 
+        )
+        || // or 
+        (
+            (index(treasureCell[0], treasureCell[1])) // treasure index  
+            == // re-calculate location if treasure index is equal to  
+            (index(entranceRow, -1)) // entrance index 
+        )
+    );
+
     /****************************************************
     * The following section modifies the initial values
     * of certain cells in the buffer
     ****************************************************/
 
-  	// turn off the left line on the upper-left cell
-  	maze.setNumber(NumberFormat.Int8LE, 0, 
-      maze.getNumber(NumberFormat.Int8LE, 0) ^ LEFTLINE);
-  
+    // place the treasure flag if using treasure 
+    if (hiddenTreasure == true) {
+        // hide the treasure 
+        hideTreasure(treasureCell[0], treasureCell[1]); 
+    }
+
+  	// turn off the left line on the entrance row
+  	maze.setNumber(NumberFormat.Int8LE, index(entranceRow, 0), 
+      maze.getNumber(NumberFormat.Int8LE, 
+        index(entranceRow, 0)) ^ LEFTLINE);
+
+
   	// give bottom row of cells a bottom line
   	for (col = 0; col < mazeCOLS; col++) {
       /*********************************************************
-       * (ROWS - 1) gives the row number of the bottom row
+       * (mazeROWS - 1) gives the row number of the bottom row
        * when counting from zero, as Javascript does for arrays.
        *********************************************************/
   		maze.setNumber(NumberFormat.Int8LE, index((mazeROWS - 1), col),
@@ -609,14 +905,15 @@ function makeMaze() {
   	}
       
   	// Give the right-most column of cells a right side line
-  	// except for the cell on the bottom row.
-  	for (row = 0; row < mazeROWS - 1; row++) {
+  	// except not for the exit row.
+  	for (row = 0; row < mazeROWS; row++) {
       /**********************************************************
-       * COLS - 1 is the offset for the right-most cell of a row
+       * mazeCOLS - 1 is the offset for the right-most cell of a row
        **********************************************************/
-        maze.setNumber(NumberFormat.Int8LE, index(row, (mazeCOLS - 1)),
+        if (row != exitRow) maze.setNumber(NumberFormat.Int8LE, index(row, (mazeCOLS - 1)),
           cellValue(row, (mazeCOLS - 1)) + RIGHTLINE);
   	}
+
     /******************************************************************
     * The next section provides the method for navigating the buffer  
     ******************************************************************/

@@ -8,37 +8,17 @@
 // * be different each time the code runs. 
 // * Run this code a few times to see some variety. 
 // * Keep in mind that the randomness applies 
-// * only during the creation of the maze; however,
-// * the maze does not change during play
+// * only during the creation of the maze.
+// * The maze does not change during play
 // * while the player is moving around in it.
 // *
 // *****************************************
 
-// * The following test of the breadcrumbs reporter block 
-// * might not appear to function correctly. 
-// * I have noticed this problem only in test.ts. 
-// * The block does work correctly when the extension 
-// * has been imported into the regular MakeCode editor. 
-
-
-// turn on the breadcrumbs display setting 
-maze.displayCrumbs(Crumbstatus.OFF);
-
-// test the breadcrumbs reporter block
-if (maze.showingBreadcrumbs) {
-    basic.showString("ON");
-} else {
-    basic.showString("OFF");
-}
-// turn on the breadcrumbs display setting 
-maze.displayCrumbs(Crumbstatus.ON);
-
-// breadcrumbs reporter block
-if (maze.showingBreadcrumbs) {
-    basic.showString("ON");
-} else {
-    basic.showString("OFF");
-}
+// sets entrance and exit portal locations to be
+// either in the corners or at random locations 
+maze.setMazePortals(MazePortal.RANDOM);
+// turns on treasure and makes it the exit portal key
+maze.setMazeTreasure(MazeTreasure.KEY)
 // create new maze, using minimum dimensions 
 maze.newMaze(2, 2);
 // pause to see the Entrance cell displayed
@@ -47,16 +27,21 @@ basic.pause(1000);
 
 // make six moves: right, down, up, down, right, right 
 // might end showing the Exit cell, might not!
-maze.move(Directions.RIGHT); // enter upper-left corner cell in the maze
+maze.move(MazeDirection.RIGHT); // enter upper-left corner cell in the maze
 basic.pause(1000);
-maze.move(Directions.DOWN); // attempt move to lower-left cell 
+maze.move(MazeDirection.DOWN); // attempt move to lower-left cell 
 basic.pause(1000);
-maze.move(Directions.UP); // try re-entering the upper-left cell 
+maze.move(MazeDirection.UP); // try re-entering the upper-left cell 
 basic.pause(1000); // breadcrumb might show up now
-maze.move(Directions.DOWN); // back to lower-left cell 
+maze.move(MazeDirection.DOWN); // back to lower-left cell 
 basic.pause(1000);
-maze.move(Directions.RIGHT); // attempt move to lower-right cell 
+maze.move(MazeDirection.RIGHT); // attempt move to lower-right cell 
 basic.pause(1000);
-maze.move(Directions.RIGHT); // attempt move to Exit cell
-
+maze.move(MazeDirection.RIGHT); // attempt move to Exit cell
+basic.pause(1000);
+if (maze.playerHasTreasure() == true) {
+    basic.showString("RICH!");
+} else {
+    basic.showString("Poor");
+}
 
