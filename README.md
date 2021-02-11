@@ -32,9 +32,11 @@ We recognize and actually hope that users may think of other ways to enjoy the f
 
 This image shows how the blocks appear after being imported into the MakeCode editor.
 
-![A rendered view of the blocks](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/maze_blocks.png)
+![A rendered view of the blocks](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/mazeBlocks_v1-2-1.png)
 
 ## About the Blocks
+
+The following block creates a new maze and places the player at the entrance to it, just outside of the maze.
 
 ![The new maze block](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/new_maze_block.png)
 
@@ -63,6 +65,35 @@ The disadvantage is the process that creates the maze takes longer as the dimens
 
 Also, keep in mind that each cell of a maze occupies one byte of memory. It means the amount of available memory imposes an upper limit.
 
+**Optional Maze Properties**
+
+Code writers can vary several properties of the maze.
+
+![The maze corners block](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/MazeCornersBlock.png)
+
+### maze.setMazePortals(MazePortal.RANDOM)
+
+selects a rule for placing the entrance and exit portals for the maze. The choices are:
+
+* CORNERS = entrance at upper-left corner and exit at lower-right corner
+* RANDOM = entrance and exit a random locations on the left- and right-hand sides, respectively
+
+![The maze treasure block](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/MazeTreasureBlock.png)
+
+### maze.setMazeTreasure(MazeTreasure.KEY)
+
+allows the game designer options for including treasure in the maze. The treasure may have magic properties that affect the exit portal. There three settings for the treasure:
+
+* NONE = do not place a treasure in the maze. The exit portal will remain open at all times.
+* HIDDEN = yes, do hide a treasure at a random location in the maze. The exit portal will remain open at all times.
+* KEY = yes, hide a treasure, and treat it as a magic key. The exit portal will be closed and invisible until the player finds the treasure. After the player has taken the treasure, the exit portal will become open and accessible.
+
+![The treasure reporter block](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/MazeTreasureReporterBlock.png)
+
+### maze.playerHasTreasure()
+
+is a boolean (true-false) block that reveals whether the player has found the optional treasure. It will return false at the start of a game. If treasure is included in the game design, it will remain false until the player finds the treasure. Afterward, it return true for the remainder of the game.
+
 ![The move block](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/move_block.png)
 
 ### maze.move(Directions.UP) 
@@ -74,11 +105,6 @@ The move block is used over and over again until the player finds their way to t
 
 ### maze.displayCrumbs(Crumbstatus.ON) 
 turns the display of "breadcrumbs" on or off. Internally, the custom code conditions a flag to indicate when a player has visited a cell. The player can use this function to tell the code whether to display the "breadcrumb" the next time the player visits that cell.  The Crumbstatus is chosen from a list. The choices are: ON and OFF. Your code can test the setting of this flag with the showingBreacdcrumbs() function, described below.
-
-![The showing breadcrumbs block](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/showingBreadcrumbs.png)
-
-### maze.showingBreadcrumbs() 
-is a reporter block that returns a true-false value. It tests the value that the displayCrumbs() block sets.
 
 ## How Cells of the Maze are Displayed
 
