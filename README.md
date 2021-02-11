@@ -69,7 +69,7 @@ Also, keep in mind that each cell of a maze occupies one byte of memory. It mean
 
 Code writers can vary several properties of the maze.
 
-![The maze corners block](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/MazeCornersBlock.png)
+![The maze corners block](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/mazeCornersBlock.png)
 
 ### maze.setMazePortals(MazePortal.RANDOM)
 
@@ -78,7 +78,7 @@ selects a rule for placing the entrance and exit portals for the maze. The choic
 * CORNERS = entrance at upper-left corner and exit at lower-right corner
 * RANDOM = entrance and exit a random locations on the left- and right-hand sides, respectively
 
-![The maze treasure block](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/MazeTreasureBlock.png)
+![The maze treasure block](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/mazeTreasureBlock.png)
 
 ### maze.setMazeTreasure(MazeTreasure.KEY)
 
@@ -88,7 +88,7 @@ allows the game designer options for including treasure in the maze. The treasur
 * HIDDEN = yes, do hide a treasure at a random location in the maze. The exit portal will remain open at all times.
 * KEY = yes, hide a treasure, and treat it as a magic key. The exit portal will be closed and invisible until the player finds the treasure. After the player has taken the treasure, the exit portal will become open and accessible.
 
-![The treasure reporter block](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/MazeTreasureReporterBlock.png)
+![The treasure reporter block](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/mazeTreasureReporterBlock.png)
 
 ### maze.playerHasTreasure()
 
