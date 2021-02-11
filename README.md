@@ -71,7 +71,7 @@ Also, keep in mind that each cell of a maze occupies one byte of memory. It mean
 
 Three of the blocks allow code writers to vary or to find out about certain optional properties of the maze. 
 
-**Important** These properties take effect at the start of a new game. The blocks do not affect the properties for a maze that may still be in play. Code writers should use the blocks in this section tp configure the properties before their code creates the next maze.
+**Important** These properties take effect at the start of a new game. The blocks do not affect the properties for a maze that may still be in play. Code writers should use the blocks in this section to configure the properties before their code creates the next maze.
 
 This section illustrates the three blocks as they might be used in block code and in javascript.
 
@@ -97,6 +97,8 @@ allows the game designer options for including treasure in the maze. The treasur
 * NONE = do not place a treasure in the maze. The exit portal will remain open at all times.
 * HIDDEN = yes, do hide a treasure at a random location in the maze. The exit portal will remain open at all times.
 * KEY = yes, hide a treasure, and treat it as a magic key. The exit portal will be closed and invisible until the player finds the treasure. After the player has taken the treasure, the exit portal will become open and accessible.
+
+If the game design includes a treasure in the maze, it will appear as a flashing diamond in the middle of its cell. The player "takes" the treasure by leaving the cell. If the player visits the cell again, the treasure will not appear there --- because now the player has it!
 
 The default setting for treasure is NONE.
 
