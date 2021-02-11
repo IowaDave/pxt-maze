@@ -65,9 +65,11 @@ The disadvantage is the process that creates the maze takes longer as the dimens
 
 Also, keep in mind that each cell of a maze occupies one byte of memory. It means the amount of available memory imposes an upper limit.
 
+---
+
 **Optional Maze Properties**
 
-Code writers can vary several properties of the maze.
+Three of the blocks allow code writers to vary or to find out about certain optional properties of the maze. This section illustrates the three blocks as they might be used in block code and in javascript.
 
 ![The maze corners block](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/mazeCornersBlock.png)
 
@@ -78,21 +80,31 @@ selects a rule for placing the entrance and exit portals for the maze. The choic
 * CORNERS = entrance at upper-left corner and exit at lower-right corner
 * RANDOM = entrance and exit a random locations on the left- and right-hand sides, respectively
 
+The default setting for the portals is CORNERS.
+
+<br><br><br>
+
 ![The maze treasure block](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/mazeTreasureBlock.png)
 
 ### maze.setMazeTreasure(MazeTreasure.KEY)
 
-allows the game designer options for including treasure in the maze. The treasure may have magic properties that affect the exit portal. There three settings for the treasure:
+allows the game designer options for including treasure in the maze. The treasure may have magic properties that affect the exit portal. Three settings are available for the treasure:
 
 * NONE = do not place a treasure in the maze. The exit portal will remain open at all times.
 * HIDDEN = yes, do hide a treasure at a random location in the maze. The exit portal will remain open at all times.
 * KEY = yes, hide a treasure, and treat it as a magic key. The exit portal will be closed and invisible until the player finds the treasure. After the player has taken the treasure, the exit portal will become open and accessible.
+
+The default setting for treasure is NONE.
+
+<br><br><br>
 
 ![The treasure reporter block](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/mazeTreasureReporterBlock.png)
 
 ### maze.playerHasTreasure()
 
 is a boolean (true-false) block that reveals whether the player has found the optional treasure. It will return false at the start of a game. If treasure is included in the game design, it will remain false until the player finds the treasure. Afterward, it return true for the remainder of the game.
+
+---
 
 ![The move block](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/move_block.png)
 
