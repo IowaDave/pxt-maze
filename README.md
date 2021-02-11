@@ -69,7 +69,11 @@ Also, keep in mind that each cell of a maze occupies one byte of memory. It mean
 
 **Optional Maze Properties**
 
-Three of the blocks allow code writers to vary or to find out about certain optional properties of the maze. This section illustrates the three blocks as they might be used in block code and in javascript.
+Three of the blocks allow code writers to vary or to find out about certain optional properties of the maze. 
+
+**Important** These properties take effect at the start of a new game. The blocks do not affect the properties for a maze that may still be in play. Code writers should use the blocks in this section tp configure the properties before their code creates the next maze.
+
+This section illustrates the three blocks as they might be used in block code and in javascript.
 
 ![The maze corners block](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/mazeCornersBlock.png)
 
@@ -105,6 +109,8 @@ The default setting for treasure is NONE.
 is a boolean (true-false) block that reveals whether the player has found the optional treasure. It will return false at the start of a game. If treasure is included in the game design, it will remain false until the player finds the treasure. Afterward, it return true for the remainder of the game.
 
 ---
+
+The remaining blocks handle the players' wishes for moving around in the maze.
 
 ![The move block](https://github.com/iowadave/pxt-maze/raw/master/.github/makecode/move_block.png)
 
