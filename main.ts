@@ -63,9 +63,9 @@ enum MazeCellCoordinate {
 /**
  * Custom blocks
  */
-//% weight=100 color=#0fbc11 icon=""
-namespace custom {
-
+//% weight=25 color=#a45100 icon="\uf047"
+namespace maze{
+	
 // variables having namespace scope 
 
 // encode whether the exit portal is located on the
